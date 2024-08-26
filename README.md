@@ -1,4 +1,4 @@
-# Moving-head-using-ESP32-CAM
+# Face Tracking using ESP32-CAM
 This part of the Project is using ESP32-CAM to detect your face and use the coordinates to Tilt and Pans to point to your face.
 
 ![Screenshot_20240813-100706_Gallery](https://github.com/user-attachments/assets/d3844ae2-bbff-478e-a5de-2d20f7aa0e16)
