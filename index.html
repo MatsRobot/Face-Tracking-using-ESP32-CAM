@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://matsrobot.github.io/Favicon-192.png" sizes="192x192">
+    
+    <title>Real-Time Face Tracking: ESP32-CAM & PCA9685 | MatsRobot</title>
+    <meta name="description" content="A standalone real-time face tracking system using ESP32-CAM and PCA9685. Features onboard Haar Cascade detection, I2C servo control, and autonomous PID logic—no Wi-Fi required.">
+    
+    <link rel="canonical" href="https://github.com/MatsRobot/Face-Tracking-using-ESP32-CAM" />
+
+    <style>
+        :root {
+            --gh-green: #238636;
+            --gh-green-hover: #2ea44f;
+            --gh-dark: #24292e;
+            --gh-blue: #0366d6;
+            --gh-border: #eaecef;
+            --gh-bg-gray: #f6f8fa;
+            --note-bg: #fffbdd;
+            --note-border: #d4a017;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; 
+            line-height: 1.6; 
+            color: var(--gh-dark); 
+            max-width: 950px; 
+            margin: 0 auto; 
+            padding: 2rem; 
+        }
+
+        .hero-section {
+            display: flex;
+            gap: 2.5rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        .hero-text { flex: 3; }
+
+        .image-sidebar { 
+            flex: 2; 
+            border: 1px solid var(--gh-border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .image-sidebar img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .caption { 
+            font-size: 0.85rem; 
+            color: #586069; 
+            margin-top: 10px; 
+            display: block; 
+        }
+
+        h1 { font-size: 1.8rem; margin-top: 0; }
+        h2 { color: var(--gh-blue); border-bottom: 1px solid var(--gh-border); padding-bottom: 0.3em; margin-top: 2rem; }
+        h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+        .note { 
+            background-color: var(--note-bg); 
+            padding: 1.25rem; 
+            border-left: 5px solid var(--note-border); 
+            margin: 1.5rem 0; 
+            border-radius: 4px;
+        }
+
+        .btn-download { 
+            background-color: var(--gh-green); 
+            color: white; 
+            padding: 12px 28px; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 18px; 
+            font-weight: 600;
+            transition: background 0.2s, transform 0.1s;
+            border: 1px solid rgba(27, 31, 35, 0.15);
+            box-shadow: 0 1px 0 rgba(27, 31, 35, 0.1);
+        }
+
+        .btn-download:hover { background-color: var(--gh-green-hover); }
+
+        .btn-text-container {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .btn-main {
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .btn-sub-lines {
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* Mobile optimization for tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px; /* Ensures table doesn't squish too much on mobile */
+        }
+
+        .tech-table th, .tech-table td { 
+            padding: 12px; 
+            border: 1px solid var(--gh-border); 
+        }
+
+        .tech-table th { background-color: var(--gh-bg-gray); text-align: left; }
+
+        footer { 
+            margin-top: 4rem; 
+            padding: 2rem 0;
+            border-top: 1px solid var(--gh-border); 
+            text-align: center; 
+            color: #6a737d; 
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section { flex-direction: column; }
+            .hero-text { order: 2; }
+            .image-sidebar { order: 1; width: 100%; }
+            .btn-download { width: 100%; justify-content: center; box-sizing: border-box; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section">
+        <div class="hero-text">
+            <h1>🤖 FaceTracker: Standalone ESP32-CAM System</h1>
+            <p>A self-contained computer vision solution that tracks human faces in real-time. This project transforms the <strong>ESP32-CAM</strong> into an active robotic sensor that independently calculates coordinates—completely independent of external apps.</p>
+            
+            <div class="note">
+                <strong>No Middleman:</strong> This system processes detection onboard and acts immediately, functioning without any Wi-Fi connection.
+            </div>
+
+            <a href="https://github.com/MatsRobot/Face-Tracking-using-ESP32-CAM" class="btn-download">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+                <div class="btn-text-container">
+                    <span class="btn-main">Get Source Code</span>
+                    <div class="btn-sub-lines">
+                        <span>Full Build Instructions & ESP-WHO Logic</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="image-sidebar">
+            <img src="https://github.com/user-attachments/assets/d3844ae2-bbff-478e-a5de-2d20f7aa0e16" alt="ESP32-CAM and PCA9685 Wiring Diagram for Robotics Face Tracking">
+            <span class="caption">Hardware Configuration</span>
+        </div>
+    </div>
+
+    <h2>How It Works: The Logic Flow</h2>
+    <p>The system operates in a continuous feedback loop to maintain target alignment:</p>
+    <ul>
+        <li><strong>Capture:</strong> The OV2640 sensor grabs a frame at QVGA resolution (320 x 240 pixels).</li>
+        <li><strong>Detection:</strong> The system scans for face landmarks internally using the <strong>ESP-WHO framework</strong>.</li>
+        <li><strong>Displacement Calculation:</strong> It determines the <strong>centroid coordinate</strong> distance from the frame center point (160, 120).</li>
+        <li><strong>Actuation:</strong> PWM adjustment commands are sent via the <strong>400kHz I2C bus</strong> to the PCA9685 driver to re-center the camera.</li>
+    </ul>
+    
+    <h2>Technical Control Loop & Logic</h2>
+    <p>The software calculates the positional offset required to drive the Pan/Tilt motors with high precision:</p>
+    <ul>
+        <li><strong>Pan Offset:</strong> Calculated by subtracting the target's current X-coordinate from the frame center.</li>
+        <li><strong>Tilt Offset:</strong> Calculated by subtracting the target's current Y-coordinate from the frame center.</li>
+        <li><strong>Hardware Acceleration:</strong> Offloading 12-bit PWM processing to the PCA9685 prevents CPU bottlenecks and eliminates servo jitter common in software-timed pulses.</li>
+    </ul>
+
+    <h2>Technical Specifications</h2>
+    <div class="table-container">
+        <table class="tech-table">
+            <thead>
+                <tr><th>Component</th><th>Role & Specification</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Microcontroller</strong></td><td>ESP32-CAM (AI-Thinker) @ 240MHz</td></tr>
+                <tr><td><strong>Servo Driver</strong></td><td>PCA9685 (12-bit PWM / I2C Address: 0x40)</td></tr>
+                <tr><td><strong>Protocol</strong></td><td>I2C Bus (SDA/SCL) shared by SSD1306 & PCA9685</td></tr>
+                <tr><td><strong>Power Management</strong></td><td>Isolated 5V rail for SG90/MG90S Micro Servos</td></tr>
+                <tr><td><strong>Detection Engine</strong></td><td>ESP-WHO Framework (MTMN Neural Network)</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>🗺️ Future Roadmap</h2>
+    <ul>
+        <li><strong>S3-Series Migration:</strong> Moving to the <strong>ESP32-S3 CAM</strong> for higher FPS, while tackling new pinout challenges.</li>
+        <li><strong>PID Control:</strong> Implementing smoother derivative logic for fluid tracking.</li>
+        <li><strong>Target Prioritization:</strong> Smart logic to follow the largest subject in crowded frames.</li>
+    </ul>
+
+    <footer>
+        <p>© 2026 MatsRobot | Part of the Open Source Robotics Initiative</p>
+        <p><small>Copyright (c) 2026 | Licensed under the <a href="https://github.com/MatsRobot/matsrobot.github.io/blob/main/LICENSE" style="color: #6a737d;">MIT License</a></small></p>
+    </footer>
+
+</body>
+</html>
