@@ -85,12 +85,32 @@ The system identifies facial landmarks and determines the **Error Vector** relat
 ## ⚡ Quick Start
 
 1. **Hardware:** Assemble the circuit using the shared I2C pinout.
-2. **Libraries:** Ensure the following are in your Arduino environment:
-   * `ESP-WHO` (Neural Network Framework)
-   * `Adafruit PWM Servo Driver`
-   * `Adafruit SSD1306`
-3. **Configuration:** Define `SERVO_MIN` and `SERVO_MAX` in `config.h` for physical calibration.
-4. **Build:** Select **AI Thinker ESP32-CAM** and upload via FTDI adapter.
+2. **Project Initialization:**
+    * Create a new project in **PlatformIO**.
+    * Select **AI Thinker ESP32-CAM** as the board.
+3. **Critical Configuration Steps:** This project uses a legacy framework (Espressif v1.0.4) that requires manual file handling to resolve missing `fd_forward.h` and `ADS1115-Driver` errors. Complete these **three steps** before attempting to compile:
+    * **1. Replace `platformio.ini`:** Overwrite the default file in your project root with the specific configuration provided (ensuring it uses `platform = espressif32@1.12.4`).
+    * **2. Replace `main.cpp`:** Copy your code into the `src` folder, replacing the existing boilerplate file.
+    * **3. Manual Library Install:** Copy the `ADS1115_Driver-1.0.2` and `esp32cam` folders into the project’s **`lib`** folder. This allows the missing legacy files to be available for the compiler.
+4. **Calibration:** Define `SERVO_MIN` and `SERVO_MAX` within the code for physical calibration.
+5. **Build & Upload:** Connect your ESP32-CAM via an FTDI adapter and click **Upload** in PlatformIO.
+
+---
+
+### 📂 Required Folder Structure
+To ensure the compiler sees your files, your project directory should look like this:
+
+```text
+Your_Project_Folder/
+├── lib/
+│   ├── ADS1115_Driver-1.0.2/
+│   └── esp32cam/            <-- Contains legacy fd_forward.h
+├── src/
+│   └── main.cpp             <-- Your actual code
+└── platformio.ini           <-- The specific v1.12.4 config
+```
+---
+
 
 ## 🔍 Troubleshooting
 
